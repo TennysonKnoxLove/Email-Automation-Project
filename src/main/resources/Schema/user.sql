@@ -1,5 +1,6 @@
--- Account records. username is unique because registration rejects a taken name.
--- email is indexed for the forgot-username lookup. logincounter is stored but not enforced.
+-- Account records. username and email are unique because registration rejects a taken name or address.
+-- logincounter is stored but not enforced.
+-- password, verification_code, and reset_code store salted PBKDF2 hashes.
 CREATE TABLE IF NOT EXISTS `user` (
     id INT NOT NULL AUTO_INCREMENT,
     username VARCHAR(100) NOT NULL,
@@ -8,7 +9,9 @@ CREATE TABLE IF NOT EXISTS `user` (
     logincounter INT NOT NULL DEFAULT 0,
     verified BOOLEAN NOT NULL DEFAULT FALSE,
     email VARCHAR(255) NOT NULL,
+    verification_code VARCHAR(255) NULL,
+    reset_code VARCHAR(255) NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uq_user_username (username),
-    KEY idx_user_email (email)
+    UNIQUE KEY uq_user_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
